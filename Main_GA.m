@@ -6,7 +6,7 @@ global P
 
 InitialParams;
 
-P.rNum = 10;
+P.rNum = 5;
 
 nStep = 1000;
 levyFlightModel;
@@ -19,6 +19,7 @@ options = optimoptions('ga','ConstraintTolerance',1e-6,'PlotFcn', @gaplotbestf);
 [x,fval] = ga(@costfunction_evaluation_solo,3*P.rNum,[],[],[],[],lb,ub,[], options);
 best_position_GA = reshape(x, [3, P.rNum]);
 [best_routes_GA , routsIdx] = RoutingProtocol(P.muPosition,P.gcsPosition,best_position_GA);
+[costFun_GA,LongestLink,ShortestIntraDist] = costFunCalc(best_routes_GA);
 
 %%
 figure;
@@ -32,11 +33,12 @@ for mf = 1: size(muPosition,2)
     plot(best_routes_GA{mf}(1,:),best_routes_GA{mf}(2,:))
     hold off
 end
-title('Genetic Algorithm')
+title(['Genetic Algorithm     -   ', 'costFcn = ', num2str(costFun_GA)])
 xlim([0 1500])
 ylim([0 1500])
 %% PSO
 [best_position_PSO, best_routes_PSO] = PSOAlgorithm_func(P.muPosition,P.gcsPosition, P.rNum);
+[costFun_PSO,LongestLink,ShortestIntraDist] = costFunCalc(best_routes_PSO);
 
 %%
 figure;
@@ -51,7 +53,7 @@ for mf = 1: size(P.muPosition,2)
     plot(best_routes_PSO{mf}(1,:),best_routes_PSO{mf}(2,:))
     hold off
 end
-title('PSO')
+title(['PSO     -   ', 'costFcn = ', num2str(costFun_PSO)])
 xlim([0 1500])
 ylim([0 1500])
 
