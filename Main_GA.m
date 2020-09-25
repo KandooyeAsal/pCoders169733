@@ -14,7 +14,9 @@ levyFlightModel;
 lb = reshape(repmat([0; 0; 50], 1, P.rNum), [3*P.rNum, 1]);
 ub = reshape(repmat([1500; 1500; 150], 1, P.rNum), [3*P.rNum, 1]);
 
-[x,fval] = ga(@costfunction_evaluation_solo,3*P.rNum,[],[],[],[],lb,ub);
+options = optimoptions('ga','ConstraintTolerance',1e-6,'PlotFcn', @gaplotbestf);
+
+[x,fval] = ga(@costfunction_evaluation_solo,3*P.rNum,[],[],[],[],lb,ub,[], options);
 best_position_GA = reshape(x, [3, P.rNum]);
 [best_routes_GA , routsIdx] = RoutingProtocol(P.muPosition,P.gcsPosition,best_position_GA);
 
