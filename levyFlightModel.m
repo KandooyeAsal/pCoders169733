@@ -1,3 +1,5 @@
+global P
+
 m = 3;
 beta = 1.5;
 levyD = levy(nStep,m*size(muPosition,2),beta); % generate the steps

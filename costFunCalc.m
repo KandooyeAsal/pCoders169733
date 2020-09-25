@@ -1,4 +1,5 @@
-function [costFun,LongestLink,ShortestIntraDist] = costFunCalc(Paths,P)
+function [costFun,LongestLink,ShortestIntraDist] = costFunCalc(Paths)
+global P
 for mm = 1:length(Paths)
     nPath = size(Paths{mm},2);
     PathsRep = repmat(Paths{mm},nPath,1);

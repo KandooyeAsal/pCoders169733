@@ -1,5 +1,5 @@
-function [routs , routIdx] = RoutingProtocol(muLoc,gcsLoc,ruLocs,P)
-
+function [routs , routIdx] = RoutingProtocol(muLoc,gcsLoc,ruLocs)
+global P
 ruLocs3 = reshape(ruLocs(1:2,:,:),2,[]);
 ruGcs = ruLocs3 - gcsLoc(1:2);
 muGcs = muLoc(1:2,:) - gcsLoc(1:2);

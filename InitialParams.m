@@ -1,7 +1,9 @@
-
-spaceLim = [0 1500;0 1500; 50 150]; % x , y , z limitations
+global P
+P.spaceLim = [0 1500;0 1500; 50 150]; % x , y , z limitations
 gcsPosition = [750 750 0]';
+P.gcsPosition = gcsPosition;
 muPosition = [300 300 100; 300 1200 100; 1200 300 100; 1200 1200 100; 400 500 120]';
+P.muPosition = muPosition;
 % muPosition = [ 300 300 100]';
 
 P.lambda = 50;
@@ -10,7 +12,7 @@ P.np = 100;
 P.w = 0.729;
 P.c1 = 1.4962;
 P.c2 = P.c1;
-P.vMax = 0.1 * diff(spaceLim,1,2);
+P.vMax = 0.1 * diff(P.spaceLim,1,2);
 P.psoIter = 100;
 P.montIter = 1;
 % P.ruNum = rNum;
