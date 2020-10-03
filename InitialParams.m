@@ -2,7 +2,9 @@ global P
 P.spaceLim = [0 1500;0 1500; 50 150]; % x , y , z limitations
 gcsPosition = [750 750 0]';
 P.gcsPosition = gcsPosition;
-muPosition = [300 300 100; 300 1200 100; 1200 300 100; 1200 1200 100; 400 500 120]';
+% muPosition = [300 300 100; 300 1200 100; 1200 300 100; 1200 1200 100; 400 500 120]';
+muPosition = [300 300 100; 300 1200 100; 1200 300 100; 1200 1200 100]';
+
 P.muPosition = muPosition;
 % muPosition = [ 300 300 100]';
 
