@@ -3,15 +3,15 @@ global P
 
 lb = reshape(repmat([0; 0; 50], 1, P.rNum), [3*P.rNum, 1]);
 ub = reshape(repmat([1500; 1500; 150], 1, P.rNum), [3*P.rNum, 1]);
-options = optimoptions('ga','ConstraintTolerance',1e-6,'PlotFcn', @gaplotbestf);
-options.CrossoverFraction = 0.7;
-options.EliteCount = 10;
-options.PopulationSize = 100;
+options = optimoptions('ga','PlotFcn', @gaplotbestf);
+% options.CrossoverFraction = 0.8;
+% options.EliteCount = 25;
+options.PopulationSize = 1000;
 
 % selection functions
 % options.SelectionFcn = 'selectionstochunif';
-% options.SelectionFcn = 'selectionroulette';
-options.SelectionFcn = 'selectionremainder';
+options.SelectionFcn = 'selectionroulette';
+% options.SelectionFcn = 'selectionremainder';
 
 % crossover
 options.CrossoverFcn = 'crossoverscattered';

@@ -17,7 +17,7 @@ text(rUAV_Positions(1,:), rUAV_Positions(2,:), rUAV_Positions(3,:), str_rUAV, 'C
 
 for mf = 1: size(P.muPosition,2)
     hold all;
-    plot(best_routes{mf}(1,:),best_routes{mf}(2,:))
+    plot3(best_routes{mf}(1,:),best_routes{mf}(2,:), best_routes{mf}(3,:))
     hold off
 end
 title(['Genetic Algorithm     -   ', 'costFcn = ', num2str(cost)])
