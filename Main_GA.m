@@ -16,12 +16,9 @@ levyFlightModel;
 
 x = ga_func();
 
-best_position_GA = reshape(x, [3, P.rNum]);
-
-[best_routes_GA , routsIdx] = RoutingProtocol(P.muPosition,P.gcsPosition,best_position_GA);
-[costFun_GA,LongestLink,ShortestIntraDist] = costFunCalc(best_routes_GA);
-
+[best_position_GA, best_routes_GA, routsIdx] = ga_func()
 %%
+[costFun_GA,LongestLink,ShortestIntraDist] = costFunCalc(best_routes_GA);
 
 figure_plot(best_position_GA, best_routes_GA, costFun_GA, 'GA')
 % figure_plot3d(best_position_GA, best_routes_GA, costFun_GA)

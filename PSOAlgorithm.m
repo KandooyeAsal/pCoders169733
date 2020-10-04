@@ -1,9 +1,9 @@
-
+global P
 %
 Position = zeros(3 , P.rNum , P.np);
 velocity = zeros(3 , P.rNum , P.np);
 for d = 1:3
-    Position(d,:,:) = randi([P.spaceLim(d,1),spaceLim(d,2)],P.rNum, P.np);
+    Position(d,:,:) = randi([P.spaceLim(d,1),P.spaceLim(d,2)],P.rNum, P.np);
 end
 
 [Routs , routsIdx] = RoutingProtocol(muPosition,gcsPosition,Position,P);

@@ -9,12 +9,13 @@ P.rNum = 10;
 nStep = 1000;
 levyFlightModel
 
-[best_position_PSO, best_routes_PSO, BestRoutIdx] = PSOAlgorithm_func(P.muPosition,P.gcsPosition, P.rNum);
+% [best_position, best_routes, BestRoutIdx] = PSOAlgorithm_func(P.muPosition,P.gcsPosition, P.rNum);
+[best_position, best_routes, BestRoutIdx] = ga_func();
 
 % [best_position_ga, best_routes_ga] = geneticAlgorithm(muPosition,gcsPosition, rNum);
 
-BestRout = best_routes_PSO;
-ruPosition = best_position_PSO;
+BestRout = best_routes;
+ruPosition = best_position;
 alpha2 = 2;
 counterPSO = 1;
 %%
@@ -127,8 +128,10 @@ for modd = 1:length(modes)
                 cnt = cnt + 1;
                 [costFunFinal , longestLink2 , shortestDist2] = costFunCalc(BestRout);
                 if deltaTed > E(2)
-                    PSOAlgorithm;
-                    ruPosition = gBest;
+%                     PSOAlgorithm;
+                    [best_position, best_routes, BestRoutIdx] = ga_func();
+%                     ruPosition = gBest
+                    ruPosition = best_position;
                     counterPSO = counterPSO + 1;
                     if modd == 4
                         cnt = cnt + 1;
