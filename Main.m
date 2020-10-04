@@ -129,7 +129,7 @@ for modd = 1:length(modes)
                 [costFunFinal , longestLink2 , shortestDist2] = costFunCalc(BestRout);
                 if deltaTed > E(2)
 %                     PSOAlgorithm;
-                    [best_position, best_routes, BestRoutIdx] = ga_func();
+                    [best_position, BestRout, BestRoutIdx] = ga_func();
 %                     ruPosition = gBest
                     ruPosition = best_position;
                     counterPSO = counterPSO + 1;
