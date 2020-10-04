@@ -1,10 +1,10 @@
 clc
-clear
+clear all
 close all
 
 InitialParams;
 
-rNum = 10;
+P.rNum = 10;
 
 nStep = 1000;
 levyFlightModel
@@ -37,9 +37,9 @@ for modd = 1:length(modes)
     for loop = 1:nStep
         muPosition = muPositionLevy(:,:,loop);
         %% Algorithm3 in Paper
-        grad = zeros(3,1);
-        gradiant = zeros(3,rNum);
-        for rr = 1:rNum
+        gradiant = zeros(3,P.rNum);
+        for rr = 1:P.rNum
+            grad = zeros(3,1);
             for mm = 1:size(muPosition,2)
                 rIdxes = BestRoutIdx{mm};
                 rIdx = find(rIdxes == rr+size(muPosition,2));
@@ -57,7 +57,7 @@ for modd = 1:length(modes)
         
         gradiant2 = gamma * gradiant;
         flag = sqrt(sum(gradiant2.^2)) <= gammaR;
-        ruPosition2 = zeros(3,rNum);
+        ruPosition2 = zeros(3,P.rNum);
         ruPosition2(:,flag) = ruPosition(:,flag) - gradiant2(:,flag);
         ruPosition2(:,~flag) = ruPosition(:,~flag) - gradiant(:,~flag) * gammaR ./sqrt(sum(gradiant(:,~flag).^2));
         ruPosition = ruPosition2;
@@ -67,7 +67,7 @@ for modd = 1:length(modes)
         for mm1 = 1: size(muPosition,2)
             BestRout{mm1} = fanetPositions(:,BestRoutIdx{mm1});
         end
-        [costFunFinal , longestLink2 , shortestDist2] = costFunCalc(BestRout,P);
+        [costFunFinal , longestLink2 , shortestDist2] = costFunCalc(BestRout);
         
         %%
         w = [30 30 0.5 1000 1000];
@@ -116,7 +116,7 @@ for modd = 1:length(modes)
             deltaTed = sum(e .* w);
             if deltaTed > E(1)
                 
-                [BestRout , BestRoutIdx] = RoutingProtocol(muPosition,gcsPosition,ruPosition,P);
+                [BestRout , BestRoutIdx] = RoutingProtocol(muPosition,gcsPosition,ruPosition);
                 neighborDist = [];
                 for mm = 1:size(muPosition,2)
                     fanetLocNew = [muPosition(:,1) ruPosition(:,BestRoutIdx{mm}(2:end-1)-size(muPosition,2)) gcsPosition];
@@ -125,7 +125,7 @@ for modd = 1:length(modes)
                 e(4) = exp(psi1 * (max(neighborDist) - P.dCm));
                 deltaTed = sum(e .* w);
                 cnt = cnt + 1;
-                [costFunFinal , longestLink2 , shortestDist2] = costFunCalc(BestRout,P);
+                [costFunFinal , longestLink2 , shortestDist2] = costFunCalc(BestRout);
                 if deltaTed > E(2)
                     PSOAlgorithm;
                     ruPosition = gBest;
@@ -148,18 +148,18 @@ for modd = 1:length(modes)
         end
         
         %
-    scatter(muPosition(1,:), muPosition(2,:), muPosition(3,:),'pentagram');
-    hold on; scatter(ruPosition(1,:), ruPosition(2,:),'hexagram'); hold off
-    hold on; scatter(gcsPosition(1), gcsPosition(2),'o'); hold off
-    for m2 = 1:size(muPosition,2)
-        hold all
-        plot(BestRout{m2}(1,:),BestRout{m2}(2,:))
-        hold off
-    end
-    xlim([0 1500])
-    ylim([0 1500])
-    title(loop)
-    pause(0.001)
+        scatter(muPosition(1,:), muPosition(2,:), muPosition(3,:),'pentagram');
+        hold on; scatter(ruPosition(1,:), ruPosition(2,:),'hexagram'); hold off
+        hold on; scatter(gcsPosition(1), gcsPosition(2),'o'); hold off
+        for m2 = 1:size(muPosition,2)
+            hold all
+            plot(BestRout{m2}(1,:),BestRout{m2}(2,:))
+            hold off
+        end
+        xlim([0 1500])
+        ylim([0 1500])
+        title(loop)
+        pause(0.001)
         %}
         costFunBestL(modd,loop) = costFunFinal;
         longestLinkL(modd,loop) = longestLink2;
@@ -171,29 +171,29 @@ end
 
 %%
 figure;
-subplot(311) ; 
+subplot(311) ;
 plot(costFunBestL(:,2:end)'); ylabel('Performance Metric','Interpreter' , 'latex');
 grid on ; legend(modes,'Interpreter' , 'latex')
 title('Comparision of IFTM, IFTM-RT, IFTM-T & PSO-Only')
 subplot(312) ; plot(longestLinkL(:,2:end)'); ylabel('Longest Link Distance(m)','Interpreter' , 'latex');
-grid on; legend(modes,'Interpreter' , 'latex');  
+grid on; legend(modes,'Interpreter' , 'latex');
 subplot(313) ; plot(shortestDistL(:,2:end)'); xlabel('Time Step','Interpreter' , 'latex');
 ylabel('Shortest Distance (m)','Interpreter' , 'latex'); grid on; legend(modes,'Interpreter' , 'latex')
 
 figure;
-subplot(311); 
+subplot(311);
 Mean1 = movmean(costFunBestL(:,2:end)',10);
 plot(Mean1); ylabel('Performance Metric','Interpreter' , 'latex');
 grid on ; legend(modes,'Interpreter' , 'latex')
 title('Cumulative moving average of Comparision')
 subplot(312)
 plot(movmean(longestLinkL(:,2:end)',10)); ylabel('Longest Link Distance(m)','Interpreter' , 'latex');
-grid on; legend(modes,'Interpreter' , 'latex');  
+grid on; legend(modes,'Interpreter' , 'latex');
 subplot(313) ; plot(movmean(shortestDistL(:,2:end)',10)); xlabel('Time Step','Interpreter' , 'latex');
 ylabel('Shortest Distance (m)','Interpreter' , 'latex'); grid on; legend(modes,'Interpreter' , 'latex')
 
 
-figure; 
+figure;
 [a1,b1] = hist(costFunBestL(1,2:end)./costFunBestL(4,2:end),20);
 subplot(211); bar(b1,a1/nStep,1)
 title('Performance metric value')
