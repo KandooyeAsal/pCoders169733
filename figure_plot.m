@@ -1,4 +1,4 @@
-function figure_plot(rUAV_Positions, best_routes, cost)
+function figure_plot(rUAV_Positions, best_routes, cost, str_title)
 global P
 figure;
 scatter(P.muPosition(1,:) , P.muPosition(2,:)  ,'pentagram');
@@ -17,6 +17,6 @@ for mf = 1: size(P.muPosition,2)
     plot(best_routes{mf}(1,:),best_routes{mf}(2,:))
     hold off
 end
-title(['Genetic Algorithm     -   ', 'costFcn = ', num2str(cost)])
+title([str_title, '    -   ', 'costFcn = ', num2str(cost)])
 xlim([0 1500])
 ylim([0 1500])

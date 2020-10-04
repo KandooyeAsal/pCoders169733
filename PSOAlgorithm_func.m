@@ -1,4 +1,4 @@
-function [best_position_PSO, best_routes_PSO] = PSOAlgorithm_func(muPosition,gcsPosition, rNum)
+function [best_position_PSO, best_routes_PSO, BestRoutIdx] = PSOAlgorithm_func(muPosition,gcsPosition, rNum)
 global P
 Position = zeros(3 , rNum , P.np);
 velocity = zeros(3 , rNum , P.np);

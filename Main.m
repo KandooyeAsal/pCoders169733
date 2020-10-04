@@ -9,10 +9,12 @@ rNum = 10;
 nStep = 1000;
 levyFlightModel
 
-PSOAlgorithm
-[best_position_ga, best_routes_ga] = geneticAlgorithm(muPosition,gcsPosition, rNum);
+[best_position_PSO, best_routes_PSO, BestRoutIdx] = PSOAlgorithm_func(P.muPosition,P.gcsPosition, P.rNum);
 
-ruPosition = gBest;
+% [best_position_ga, best_routes_ga] = geneticAlgorithm(muPosition,gcsPosition, rNum);
+
+BestRout = best_routes_PSO;
+ruPosition = best_position_PSO;
 alpha2 = 2;
 counterPSO = 1;
 %%

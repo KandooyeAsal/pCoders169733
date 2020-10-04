@@ -52,17 +52,19 @@ best_position_GA = reshape(x, [3, P.rNum]);
 disp(['GA calculation time = ', num2str(t_GA)])
 %%
 
-figure_plot(best_position_GA, best_routes_GA, costFun_GA)
+figure_plot(best_position_GA, best_routes_GA, costFun_GA, 'GA')
+% figure_plot3d(best_position_GA, best_routes_GA, costFun_GA)
+
 
 %% PSO
 tic
-[best_position_PSO, best_routes_PSO] = PSOAlgorithm_func(P.muPosition,P.gcsPosition, P.rNum);
+[best_position_PSO, best_routes_PSO, BestRoutIdx] = PSOAlgorithm_func(P.muPosition,P.gcsPosition, P.rNum);
 [costFun_PSO,LongestLink,ShortestIntraDist] = costFunCalc(best_routes_PSO);
 t_PSO = toc;
 disp(['PSO calculation time = ', num2str(t_PSO)])
 %%
 
-figure_plot(best_position_PSO, best_routes_PSO, costFun_PSO)
+figure_plot(best_position_PSO, best_routes_PSO, costFun_PSO, 'PSO')
 
 
 %%
