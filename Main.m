@@ -152,8 +152,14 @@ for modd = 1:length(modes)
         
         %
         scatter(muPosition(1,:), muPosition(2,:), muPosition(3,:),'pentagram');
+        str_mUAV = num2str((2+P.rNum:1+P.rNum+size(muPosition, 2)).');
+        text(muPosition(1,:) , muPosition(2,:), str_mUAV, 'Color','blue','FontSize',14)
         hold on; scatter(ruPosition(1,:), ruPosition(2,:),'hexagram'); hold off
-        hold on; scatter(gcsPosition(1), gcsPosition(2),'o'); hold off
+        str_rUAV = num2str((2:1+P.rNum).');
+        text(ruPosition(1,:),ruPosition(2,:), str_rUAV, 'Color','black','FontSize',14);
+        hold on; scatter(gcsPosition(1), gcsPosition(2),'o');
+        text(gcsPosition(1) , gcsPosition(2), num2str(1), 'Color','green','FontSize',14)
+        hold off
         for m2 = 1:size(muPosition,2)
             hold all
             plot(BestRout{m2}(1,:),BestRout{m2}(2,:))
