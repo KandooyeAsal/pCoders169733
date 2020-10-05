@@ -2,6 +2,9 @@ clc
 clear all
 close all
 
+PSOAlgorithm = false;
+GeneticAlgorithm = true;
+
 InitialParams;
 
 P.rNum = 10;
@@ -9,10 +12,15 @@ P.rNum = 10;
 nStep = 1000;
 levyFlightModel
 
-% [best_position, best_routes, BestRoutIdx] = PSOAlgorithm_func(P.muPosition,P.gcsPosition, P.rNum);
-[best_position, best_routes, BestRoutIdx] = ga_func();
+if PSOAlgorithm == true
+    % [best_position, best_routes, BestRoutIdx] = PSOAlgorithm_func(P.muPosition,P.gcsPosition, P.rNum);
+elseif GeneticAlgorithm == true
+    [best_position, best_routes, BestRoutIdx] = ga_func();
+else
+    disp('One of the PSO or Genetic algorithms must be chosen')
+    return
+end
 
-% [best_position_ga, best_routes_ga] = geneticAlgorithm(muPosition,gcsPosition, rNum);
 
 BestRout = best_routes;
 ruPosition = best_position;
@@ -128,10 +136,18 @@ for modd = 1:length(modes)
                 cnt = cnt + 1;
                 [costFunFinal , longestLink2 , shortestDist2] = costFunCalc(BestRout);
                 if deltaTed > E(2)
-%                     PSOAlgorithm;
-                    [best_position, BestRout, BestRoutIdx] = ga_func();
-%                     ruPosition = gBest
-                    ruPosition = best_position;
+                    
+                    if PSOAlgorithm == true
+                        PSOAlgorithm;
+                        ruPosition = gBest
+                    elseif GeneticAlgorithm == true
+                        [best_position, BestRout, BestRoutIdx] = ga_func();
+                        ruPosition = best_position;
+                    else
+                        disp('One of the PSO or Genetic algorithms must be chosen')
+                        return
+                    end
+                    
                     counterPSO = counterPSO + 1;
                     if modd == 4
                         cnt = cnt + 1;
