@@ -4,12 +4,12 @@ ruLocs3 = reshape(ruLocs(1:2,:,:),2,[]);
 ruGcs = ruLocs3 - gcsLoc(1:2);
 muGcs = muLoc(1:2,:) - gcsLoc(1:2);
 thetasRu = 180 +  atan2d(ruGcs(2,:),ruGcs(1,:));
-rRu = sqrt(sum(ruGcs.^2)) * 3;
+rRu = sqrt(sum(ruGcs.^2)) * 10;
 
 thetasMu = 180 +  atan2d(muGcs(2,:),muGcs(1,:));
-rMu = sqrt(sum(muGcs.^2)) * 3;
+rMu = sqrt(sum(muGcs.^2)) * 10;
 
-Phi = 60;
+Phi = 80;
 pR2 = [rRu .* cosd(thetasRu - Phi) ; rRu .* sind(thetasRu - Phi)] + ruLocs3;
 pR3 = [rRu .* cosd(thetasRu + Phi) ; rRu .* sind(thetasRu + Phi)] + ruLocs3;
 

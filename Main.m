@@ -9,11 +9,11 @@ InitialParams;
 
 P.rNum = 10;
 
-nStep = 1000;
-levyFlightModel
+nStep = 100;
+% levyFlightModel
 
 if PSOAlgorithm == true
-    % [best_position, best_routes, BestRoutIdx] = PSOAlgorithm_func(P.muPosition,P.gcsPosition, P.rNum);
+    [best_position, best_routes, BestRoutIdx] = PSOAlgorithm_func(P.muPosition,P.gcsPosition, P.rNum);
 elseif GeneticAlgorithm == true
     [best_position, best_routes, BestRoutIdx] = ga_func();
 else
@@ -26,11 +26,13 @@ BestRout = best_routes;
 ruPosition = best_position;
 alpha2 = 2;
 counterPSO = 1;
+flag_remove_mUAV = true;
 %%
 modes = {'IFTM' , 'IFTM-RT' , 'IFTM-T' , 'PSO-Only'};
 % figure
 for modd = 1:length(modes)
-    
+    levyFlightModel
+
     switch modes{modd}
         case 'IFTM'
             E = [700 1000];
@@ -70,7 +72,7 @@ for modd = 1:length(modes)
         ruPosition2(:,flag) = ruPosition(:,flag) - gradiant2(:,flag);
         ruPosition2(:,~flag) = ruPosition(:,~flag) - gradiant(:,~flag) * gammaR ./sqrt(sum(gradiant(:,~flag).^2));
         ruPosition = ruPosition2;
-        ruPosition3(:,:,loop) = ruPosition;
+%         ruPosition3(:,:,loop) = ruPosition;
         
         fanetPositions = [muPosition ruPosition gcsPosition];
         for mm1 = 1: size(muPosition,2)
@@ -184,12 +186,32 @@ for modd = 1:length(modes)
         xlim([0 1500])
         ylim([0 1500])
         title(loop)
+        grid on
         pause(0.001)
         %}
         costFunBestL(modd,loop) = costFunFinal;
         longestLinkL(modd,loop) = longestLink2;
         shortestDistL(modd,loop) = shortestDist2;
         loopState = [modd loop]
+        
+        flag_remove_mUAV = true;
+        if loop == 50
+            ind_mUAV = randi(4, 1);
+            distances = squareform(pdist([muPosition(:, ind_mUAV), ruPosition].'));
+            distances = distances(1, :);
+            distances = distances(2:end);
+            [~, ind_rUAV] = min(distances);
+            
+            muPosition(:, ind_mUAV) = ruPosition(:, ind_rUAV);
+            ruPosition(:, ind_rUAV) = [];
+            P.rNum = P.rNum - 1;
+            [~ , BestRoutIdx] = RoutingProtocol(muPosition,gcsPosition,ruPosition);
+            flag_remove_mUAV = false;
+            levyFlightModel;
+            muPositionLevy = cat(3, zeros(3, 4, loop),muPositionLevy);
+            
+        end
+        
     end
     
 end
