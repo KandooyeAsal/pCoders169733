@@ -2,17 +2,17 @@ clc
 clear all
 close all
 
-PSOAlgorithm = false;
-GeneticAlgorithm = true;
+PSO_Algorithm = true ;
+GeneticAlgorithm = false;
 
 InitialParams;
 
 P.rNum = 10;
 
-nStep = 100;
+nStep = 500;
 % levyFlightModel
 
-if PSOAlgorithm == true
+if PSO_Algorithm == true
     [best_position, best_routes, BestRoutIdx] = PSOAlgorithm_func(P.muPosition,P.gcsPosition, P.rNum);
 elseif GeneticAlgorithm == true
     [best_position, best_routes, BestRoutIdx] = ga_func();
@@ -139,9 +139,9 @@ for modd = 1:length(modes)
                 [costFunFinal , longestLink2 , shortestDist2] = costFunCalc(BestRout);
                 if deltaTed > E(2)
                     
-                    if PSOAlgorithm == true
-                        PSOAlgorithm;
-                        ruPosition = gBest
+                    if PSO_Algorithm == true
+                        [best_position, BestRout, BestRoutIdx] = PSOAlgorithm_func(P.muPosition,P.gcsPosition, P.rNum);
+                        ruPosition = best_position;
                     elseif GeneticAlgorithm == true
                         [best_position, BestRout, BestRoutIdx] = ga_func();
                         ruPosition = best_position;
