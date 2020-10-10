@@ -20,6 +20,8 @@ else
     disp('One of the PSO or Genetic algorithms must be chosen')
     return
 end
+str_mUAV = [repmat('  M ' ,size(muPosition, 2),1 ) num2str((1:size(muPosition, 2)).')];
+str_rUAV = [repmat('  R',P.rNum,1) num2str((1:P.rNum).')];
 
 
 BestRout = best_routes;
@@ -32,7 +34,7 @@ modes = {'IFTM' , 'IFTM-RT' , 'IFTM-T' , 'PSO-Only'};
 % figure
 for modd = 1:length(modes)
     levyFlightModel
-
+    
     switch modes{modd}
         case 'IFTM'
             E = [700 1000];
@@ -72,7 +74,7 @@ for modd = 1:length(modes)
         ruPosition2(:,flag) = ruPosition(:,flag) - gradiant2(:,flag);
         ruPosition2(:,~flag) = ruPosition(:,~flag) - gradiant(:,~flag) * gammaR ./sqrt(sum(gradiant(:,~flag).^2));
         ruPosition = ruPosition2;
-%         ruPosition3(:,:,loop) = ruPosition;
+        %         ruPosition3(:,:,loop) = ruPosition;
         
         fanetPositions = [muPosition ruPosition gcsPosition];
         for mm1 = 1: size(muPosition,2)
@@ -140,11 +142,39 @@ for modd = 1:length(modes)
                 if deltaTed > E(2)
                     
                     if PSO_Algorithm == true
-                        [best_position, BestRout, BestRoutIdx] = PSOAlgorithm_func(P.muPosition,P.gcsPosition, P.rNum);
-                        ruPosition = best_position;
+                        [best_position, BestRout, BestRoutIdx] = PSOAlgorithm_func(muPosition,P.gcsPosition, P.rNum);
+                        for i1 = 1:size(best_position,2)
+                            ruDiff(i1,:) = sqrt(sum((abs(ruPosition(:,i1) - best_position)).^2));
+                        end
+                        for ii = 1:size(best_position,2)
+                            [~,IdxNew(ii)] = min(ruDiff(ii,:));
+                            ruDiff(:,IdxNew(ii)) = inf;
+                        end
+                        for ii2 = 1:size(best_position,2)
+                            [~,IdxNew2(ii2)] = find(ii2 == IdxNew);
+                        end
+                            
+                        ruPosition = best_position(:,IdxNew);
+                        for ll = 1:size(BestRoutIdx,2)
+                            BestRoutIdx{1,ll}(2:end-1) = IdxNew2(BestRoutIdx{1,ll}(2:end-1)-4)+4;
+                        end
                     elseif GeneticAlgorithm == true
                         [best_position, BestRout, BestRoutIdx] = ga_func();
-                        ruPosition = best_position;
+                                                for i1 = 1:size(best_position,2)
+                            ruDiff(i1,:) = sqrt(sum((abs(ruPosition(:,i1) - best_position)).^2));
+                        end
+                        for ii = 1:size(best_position,2)
+                            [~,IdxNew(ii)] = min(ruDiff(ii,:));
+                            ruDiff(:,IdxNew(ii)) = inf;
+                        end
+                        for ii2 = 1:size(best_position,2)
+                            [~,IdxNew2(ii2)] = find(ii2 == IdxNew);
+                        end
+                            
+                        ruPosition = best_position(:,IdxNew);
+                        for ll = 1:size(BestRoutIdx,2)
+                            BestRoutIdx{1,ll}(2:end-1) = IdxNew2(BestRoutIdx{1,ll}(2:end-1)-4)+4;
+                        end
                     else
                         disp('One of the PSO or Genetic algorithms must be chosen')
                         return
@@ -170,10 +200,8 @@ for modd = 1:length(modes)
         
         %
         scatter(muPosition(1,:), muPosition(2,:), muPosition(3,:),'pentagram');
-        str_mUAV = [repmat('  M' ,size(muPosition, 2),1 ) num2str((1:size(muPosition, 2)).')];
         text(muPosition(1,:) , muPosition(2,:), str_mUAV, 'Color','blue','FontSize',11)
         hold on; scatter(ruPosition(1,:), ruPosition(2,:),'hexagram'); hold off
-        str_rUAV = [repmat('  R',P.rNum,1) num2str((1:P.rNum).')];
         text(ruPosition(1,:),ruPosition(2,:), str_rUAV, 'Color','black','FontSize',11);
         hold on; scatter(gcsPosition(1), gcsPosition(2),'o');
         text(gcsPosition(1) , gcsPosition(2), 'GCS', 'Color','green','FontSize',11)
@@ -194,14 +222,15 @@ for modd = 1:length(modes)
         shortestDistL(modd,loop) = shortestDist2;
         loopState = [modd loop]
         
-        flag_remove_mUAV = true;
-        if loop == 50
+        if loop == 50 && flag_remove_mUAV
             ind_mUAV = randi(4, 1);
             distances = squareform(pdist([muPosition(:, ind_mUAV), ruPosition].'));
             distances = distances(1, :);
             distances = distances(2:end);
             [~, ind_rUAV] = min(distances);
-            
+            figure(1); title(['mUAV# ' num2str(ind_mUAV) ' is removed and rUAV#' num2str(ind_rUAV) ' is replaced']); pause(10e-3)
+            str_mUAV(ind_mUAV,:) = str_rUAV(ind_rUAV,:);
+            str_rUAV(ind_rUAV,:) = [];
             muPosition(:, ind_mUAV) = ruPosition(:, ind_rUAV);
             ruPosition(:, ind_rUAV) = [];
             P.rNum = P.rNum - 1;

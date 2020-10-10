@@ -6,7 +6,7 @@ for d = 1:3
     Position(d,:,:) = randi([P.spaceLim(d,1),P.spaceLim(d,2)],rNum, P.np);
 end
 
-[Routs , routsIdx] = RoutingProtocol(P.muPosition,P.gcsPosition,Position);
+[Routs , routsIdx] = RoutingProtocol(muPosition,P.gcsPosition,Position);
 
 for n = 1:P.np
     [costFunBest(n) , longestLink(n) , shortestDist(n)] = costFunCalc(Routs(n,:));
@@ -22,7 +22,7 @@ u2 = rand(size(pBestI,1),size(pBestI,2),size(pBestI,3),P.psoIter);
 % figure;
 for nPso = 1:P.psoIter
     
-    [Routs , routsIdx] = RoutingProtocol(P.muPosition,P.gcsPosition,Position);
+    [Routs , routsIdx] = RoutingProtocol(muPosition,P.gcsPosition,Position);
     
     for np = 1:P.np
         [costFunNew(np) , longestLink(np) , shortestDist(np)] = costFunCalc(Routs(np,:));
