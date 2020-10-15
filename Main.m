@@ -29,7 +29,7 @@ BestRout = best_routes;
 ruPosition = best_position;
 alpha2 = 2;
 counterPSO = 1;
-flag_remove_mUAV = true;
+flag_remove_mUAV = false;
 %%
 modes = {'IFTM' , 'IFTM-RT' , 'IFTM-T' , 'PSO-Only'};
 % figure
@@ -164,7 +164,7 @@ for modd = 1:length(modes)
                     elseif GeneticAlgorithm == true
 %                         [best_position, BestRout, BestRoutIdx] = ga_func();
                             P.muPosition = muPosition;
-                            [best_position, best_routes, BestRoutIdx] = ga_func_manual(@costfunction_evaluation_solo);
+                            [best_position, BestRout, BestRoutIdx] = ga_func_manual(@costfunction_evaluation_solo);
                         for i1 = 1:size(best_position,2)
                             ruDiff(i1,:) = sqrt(sum((abs(ruPosition(:,i1) - best_position)).^2));
                         end
