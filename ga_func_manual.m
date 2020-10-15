@@ -111,8 +111,8 @@ for k = 1:P.MAX_generation
 %     title(['generation: ', num2str(k), ' - cost: ', num2str(best_fittness)])
 %     grid on
 %     pause(0.2)
-    
-    disp(['genetic algorithm developement: ', num2str(k/P.MAX_generation), '%'])
+    clc
+    disp(['genetic algorithm developement: ', num2str(round(k/P.MAX_generation*100)), '%'])
 end
 
 best_position_GA = reshape(best_chromosome, [3, P.rNum]);
