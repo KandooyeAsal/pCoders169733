@@ -2,8 +2,8 @@ clc
 clear all
 close all
 
-PSO_Algorithm = true ;
-GeneticAlgorithm = false;
+PSO_Algorithm = false ;
+GeneticAlgorithm = true;
 
 InitialParams;
 
@@ -15,7 +15,8 @@ nStep = 500;
 if PSO_Algorithm == true
     [best_position, best_routes, BestRoutIdx] = PSOAlgorithm_func(P.muPosition,P.gcsPosition, P.rNum);
 elseif GeneticAlgorithm == true
-    [best_position, best_routes, BestRoutIdx] = ga_func();
+%     [best_position, best_routes, BestRoutIdx] = ga_func();
+    [best_position, best_routes, BestRoutIdx] = ga_func_manual(@costfunction_evaluation_solo);
 else
     disp('One of the PSO or Genetic algorithms must be chosen')
     return
@@ -161,8 +162,10 @@ for modd = 1:length(modes)
                             BestRoutIdx{1,ll}(2:end-1) = IdxNew2(BestRoutIdx{1,ll}(2:end-1)-4)+4;
                         end
                     elseif GeneticAlgorithm == true
-                        [best_position, BestRout, BestRoutIdx] = ga_func();
-                                                for i1 = 1:size(best_position,2)
+%                         [best_position, BestRout, BestRoutIdx] = ga_func();
+                            P.muPosition = muPosition;
+                            [best_position, best_routes, BestRoutIdx] = ga_func_manual(@costfunction_evaluation_solo);
+                        for i1 = 1:size(best_position,2)
                             ruDiff(i1,:) = sqrt(sum((abs(ruPosition(:,i1) - best_position)).^2));
                         end
                         for ii = 1:size(best_position,2)
