@@ -142,6 +142,8 @@ for modd = 1:length(modes)
                 if deltaTed > E(2)
                     
                     if PSO_Algorithm == true
+%                         figure(1); title(['PSO is running, please waite']); pause(10e-3)
+
                         [best_position, BestRout, BestRoutIdx] = PSOAlgorithm_func(muPosition,P.gcsPosition, P.rNum);
                         for i1 = 1:size(best_position,2)
                             ruDiff(i1,:) = sqrt(sum((abs(ruPosition(:,i1) - best_position)).^2));
