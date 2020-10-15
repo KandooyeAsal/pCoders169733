@@ -10,14 +10,14 @@ global P
 P.lb = reshape(repmat([0; 0; 50], 1, P.rNum), [3*P.rNum, 1]).';
 P.ub = reshape(repmat([1500; 1500; 150], 1, P.rNum), [3*P.rNum, 1]).';
 
-P.NUM_chromosome = 600;
+P.NUM_chromosome = 300;
 P.Percent_reproduction = 0.95;
 P.NUM_reproduction = floor(P.Percent_reproduction * P.NUM_chromosome);
-P.MAX_generation = 50;
+P.MAX_generation = 80;
 P.Scale_mutation = 0.1*(P.ub - P.lb);
 P.Shrink_mutation = 0.6;
 P.Tournament_Size = 4;
-P.Ratio = 1.2;
+P.Ratio = 0.8;
 
 % initial population
 chromosome = repmat((P.ub - P.lb), P.NUM_chromosome, 1) .*(rand(P.NUM_chromosome, 3*P.rNum)) + P.lb;
@@ -46,7 +46,7 @@ for k = 1:P.MAX_generation
     % selection
     selection_rand = randi(P.NUM_chromosome, P.NUM_reproduction, P.Tournament_Size);
     selection_fittnes = sort_fittness(selection_rand);
-    [selection_fittnes_sorted, selection_Ind_sorted] = sort(selection_fittnes, 2);
+    [selection_fittnes_sorted, selection_Ind_sorted] = sort(selection_fittnes, 2, 'ascend');
     
     selection_parent1_Ind = zeros(P.NUM_reproduction, 1);
     selection_parent2_Ind = zeros(P.NUM_reproduction, 1);
@@ -67,6 +67,8 @@ for k = 1:P.MAX_generation
     
     new_chromosome = sort_chromosome;
     new_chromosome(P.NUM_chromosome - P.NUM_reproduction + 1:end, :) = children;
+    
+    
     
     %     fittness = f(new_chromosome);
     fittness = zeros(P.NUM_chromosome, 1);
@@ -92,25 +94,25 @@ for k = 1:P.MAX_generation
     %     title(num2str(k))
     %     pause(0.001)
     
-    position = reshape(best_chromosome, [3, P.rNum]);
-    [BestRout , routsIdx] = RoutingProtocol(P.muPosition,P.gcsPosition,position);
-    figure(3);
-    scatter(P.muPosition(1,:), P.muPosition(2,:), P.muPosition(3,:),'pentagram');
-    hold on; scatter(position(1,:), position(2,:),'hexagram'); hold off
-    hold on; scatter(P.gcsPosition(1), P.gcsPosition(2),'o');
-    hold off
-    for m2 = 1:size(P.muPosition,2)
-        hold all
-        plot(BestRout{m2}(1,:),BestRout{m2}(2,:))
-        hold off
-    end
-    xlim([0 1500])
-    ylim([0 1500])
-    title(['generation: ', num2str(k), ' - cost: ', num2str(best_fittness)])
-    grid on
-    pause(0.2)
+%     position = reshape(best_chromosome, [3, P.rNum]);
+%     [BestRout , routsIdx] = RoutingProtocol(P.muPosition,P.gcsPosition,position);
+%     figure(3);
+%     scatter(P.muPosition(1,:), P.muPosition(2,:), P.muPosition(3,:),'pentagram');
+%     hold on; scatter(position(1,:), position(2,:),'hexagram'); hold off
+%     hold on; scatter(P.gcsPosition(1), P.gcsPosition(2),'o');
+%     hold off
+%     for m2 = 1:size(P.muPosition,2)
+%         hold all
+%         plot(BestRout{m2}(1,:),BestRout{m2}(2,:))
+%         hold off
+%     end
+%     xlim([0 1500])
+%     ylim([0 1500])
+%     title(['generation: ', num2str(k), ' - cost: ', num2str(best_fittness)])
+%     grid on
+%     pause(0.2)
     
-    k
+    disp(['genetic algorithm developement: ', num2str(k/P.MAX_generation), '%'])
 end
 
 best_position_GA = reshape(best_chromosome, [3, P.rNum]);
